@@ -1,27 +1,28 @@
 // Unit-test.cpp: определяет точку входа для консольного приложения.
 //
 #include <stdio.h>
-
+#include <locale>
 
 int test_shift_elements(); // тесты для функций
 int shift_elements (int submass_offsets, int length, int mass[20]);  //тестируемая функция
 
 int main()
 {
-// Тестирование
-puts("Тестирование функции deleteElement ...");
-if(test_shift_elements())
-{
-puts("\n----------------------------------------------------------------");
-puts("\nfunction correct");
-}
-else
-{
-puts("\n----------------------------------------------------------------");
-puts("\nfunction incorrect");
-}
+	setlocale(LC_ALL, "Russian");
+	// Тестирование
+	puts("Тестирование функции deleteElement ...");
+	if(test_shift_elements())
+	{
+		puts("\n----------------------------------------------------------------");
+		puts("\nfunction correct");
+	}
+	else
+	{
+		puts("\n----------------------------------------------------------------");
+		puts("\nfunction incorrect");
+	}
 
-return 0;
+	return 0;
 }
 
 ///////////////////////////////////////
@@ -39,10 +40,11 @@ int shift_elements (int submass_offsets, int length, int mass[20])
 	return 0;
 }
 
-int cmp(int a[], int b[], int length) {
+bool cmp(int a[], int b[], int length) {
 	bool equal = true;
 	for (int i = 0; i < length; i++)
-		if (a[i] != b[i]) equal = false;
+		if (a[i] != b[i]) 
+			equal = false;
 	return equal;
 }
 
@@ -66,11 +68,11 @@ int test_shift_elements ()
 	int input_length[test_count] = {7, 7, 6, 2, 20};
     int input_arr[test_count][20] =
     {
-    {1, 2, 3, 4, 5, 6, 7},
-	{1, 2, 3, 4, 5, 6, 7},
-	{1, 2, 3, 4, 5, 6},
-	{1, 2},
-	{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}
+		{1, 2, 3, 4, 5, 6, 7},
+		{1, 2, 3, 4, 5, 6, 7},
+		{1, 2, 3, 4, 5, 6},
+		{1, 2},
+		{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}
     };
    
 	// Ожидаемые выходные данные
@@ -94,7 +96,7 @@ int test_shift_elements ()
 		shift_elements (input_submass_offsets[i], input_length[i], input_arr[i]);
 
 		// Сравниваем полученный результат с эталонным на совпадение
-		bool equal = cmp(diff_index, expect_arr[i], length_expect[i]);
+		bool equal = cmp(input_arr[i], expect_arr[i], length_expect[i]);
 
 		//Проверка результатов
 		if (equal) {
