@@ -21,6 +21,12 @@
     <ClCompile Include="Laba005.cpp">
       <Filter>Файлы ресурсов</Filter>
     </ClCompile>
+    <ClCompile Include="Lab_03_tarapatina.cpp">
+      <Filter>Файлы ресурсов</Filter>
+    </ClCompile>
+    <ClCompile Include="Unit-test.cpp">
+      <Filter>Файлы ресурсов</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="C:\Users\Михаил\Desktop\kate%27s field\Kate%27s field in Kate%27s field\универ\основы программирования\2 лаба\Lab_02_tarapatina\Lab_02_tarapatina\testing.h">
