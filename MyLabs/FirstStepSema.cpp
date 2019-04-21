@@ -8,48 +8,6 @@
 	lineIndex, characterIndex – начальная позиция поиска (индекс строки, индекс символа в строке)
 */
 void findPairBrackets(const char text[20][81], int strCount, int lineIndex, int characterIndex, int brackets[4]);
-//функция для извлечения подстроки, заключенной
-//в скобки
-//char* extract(char* str, int& index)
-//{
-//	char buffer[MAX];   //временное пространство для подстроки
-//	char* pstr(nullptr);//указатель на новую строку для возраста
-//	int numL(0);        //счетчик найденных левых скобок
-//	int bufindex(index);//сохранить начальное значение index
-//
-//	do
-//	{
-//		buffer[index - bufindex] = *(str + index);
-//		switch (buffer[index - bufindex])
-//		{
-//		case ')':
-//			if (0 == numL)
-//			{
-//				buffer[index - bufindex] = '\0'; //заменить ')'
-//				++index;                         //на '\0'
-//				pstr = new char[index - bufindex];
-//				if (!pstr)
-//				{
-//					cout << "Program broken :'(\n";
-//					exit(1);
-//				}
-//				strcpy_s(pstr, index - bufindex, buffer);//копировать подстроку в новую память
-//
-//				return pstr;
-//			}
-//			else numL--;
-//			break;
-//
-//		case '(': numL++;
-//			break;
-//		}
-//
-//	} while (*(str + index++) != '\0');
-//
-//	error(0);
-//	cout << "Program broken :'(\n";
-//	exit(1);
-//}
 /*
 	str – исходная строка
 	beginPos, endPos – начальная и конечная позиции подстроки, которую необходимо вырезать (удалить)
@@ -66,7 +24,7 @@ int main() {
 	for (int i = 0; i < M; i++)
 		gets_s(text[i]);
 
-	int brackets[4] = {-1};
+	int brackets[4] = {-1, -1, -1, -1};
 	findPairBrackets(text, M, 0, 0, brackets);
 
 	for (int i = 0; i < 4; i++)
@@ -94,12 +52,12 @@ void findPairBrackets(const char text[20][81], int strCount, int lineIndex, int 
 				break;
 			}
 			if ((numL == numR) && numR > 0 && numL > 0) {
-				posiR = i;
-				posjR = j;
+				//posiR = i;
+				//posjR = j;
 				brackets[0] = posiL;
 				brackets[1] = posjL;
-				brackets[2] = posiR;
-				brackets[3] = posjR;
+				brackets[2] = i;
+				brackets[3] = j;
 				break;
 			}
 		}
@@ -108,5 +66,9 @@ void findPairBrackets(const char text[20][81], int strCount, int lineIndex, int 
 			break;
 		}
 	}
+}
 
+void cutString(char str[81], int beginPos, int endPos) {
+	for (int i = beginPos; i < endPos || str[i] != '\0'; i++)
+		str[i] = " ";
 }
