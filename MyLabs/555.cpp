@@ -18,10 +18,9 @@ void FindDuplicate(const int arr[], int N, int EqualArr[][20], int ArrColumns[20
 		bool ItWrite;//вспомогательная переменная для расположения элементов в одной строчке
 		bool CheckedElement;//переменная для проверки были элемент ранее задействован в цикле
 		bool NotFoundDuplicate;//считается, что изначально в массиве нет дублей
-		//int MaxColumns;//необходимо для нахождения максимального значения колонок в массиве, чтобы использовать это при печати
 
 		//Инициализация значений для работы с ними
-		ItWrite = false;
+		ItWrite = false;//здесь можно накосячить
 		CheckedElement = false;
 		NotFoundDuplicate = true;
 		int colums = 0;
@@ -31,18 +30,18 @@ void FindDuplicate(const int arr[], int N, int EqualArr[][20], int ArrColumns[20
 		for (int i = 0; i < N - 1; i++) {
 
 			//поиск раннее проверенной переменной
+			CheckedElement = false;
 			for (int k = i - 1; k >= 0; k--) {
 				if (arr[k] == arr[i])
 					CheckedElement = true;
 			}
 
 			//если элемент ранее не использовался
-			if (!CheckedElement) {
+			if (!CheckedElement) {//и здесь
 				for (int j = i + 1; j < N; j++) {
 					//если элемент индекс arr[i] нету в массиве
 					//и не рассматривался ранее
 					if (arr[j] == arr[i] && !ItWrite) {
-						//printf("%d %d ", i, j);
 						//присовить значения
 						EqualArr[rows][colums++] = i;
 						EqualArr[rows][colums++] = j;
@@ -52,22 +51,19 @@ void FindDuplicate(const int arr[], int N, int EqualArr[][20], int ArrColumns[20
 						ItWrite = true;
 					}
 					//если у элемента arr[i] ранее были дубли
-					else if (arr[j] == arr[i] && ItWrite) {
+					else if (arr[j] == arr[i] && ItWrite) { //и тут
 						EqualArr[rows][colums++] = j;
 					}
 				}
 			}
 			ArrColumns[rows] = colums;
+			//сбросить значение колонок
+			colums = 0;
 			//если у элемента arr[i] были дубли и он не был ранее в массиве
 			if (ItWrite)
 				rows++;
-				//сбросить значение колонок
-				colums = 0;
-		}
-
-			//сброс значений 
 			ItWrite = false;
-			CheckedElement = false;
+		}
 
 	//дубли не найдены, решения нет
 	if (NotFoundDuplicate)
@@ -111,15 +107,19 @@ void print(int arr[][20], int ArrColumns[20]){
 	int ResultArray[][20] - эталонный массив
 	int ArrColumns[20] - количество колонок в каждой строке
 */
-bool CompareArrays(int CurrentArray[][5], int ResultArray[][20], int ArrColumns[20]) {
+bool CompareArrays(int CurrentArray[][7], int ResultArray[][20], int ArrColumns[5]) {
 	bool AllIsEqual = false;//переменная для проверки индентичности всех элементов
 
 	for (int i = 0; ArrColumns[i] != 0 ; i++)
 		for (int j = 0; j < ArrColumns[i]; j++)
 			if (ResultArray[i][j] != CurrentArray[i][j]) {//если элементы не совпадают с эталонным
-				printf("Incorrect data in %d %d place\n", i, j);
 				AllIsEqual = true;
 			}
+
+	//в случае если задача не имела решения
+	if (ArrColumns[0] == 0 && CurrentArray[0][0] != ResultArray[0][0])
+		AllIsEqual = true;
+
 	return !AllIsEqual;
 }
 
@@ -128,55 +128,68 @@ bool CompareArrays(int CurrentArray[][5], int ResultArray[][20], int ArrColumns[
 	int EqualArr[][20] - тестируемый массив
 	int ArrColumns[20] - количество колонок в каждой его строке
 */
-void UnitTests(int EqualArr[][20], int ArrColumns[20]) {
-	
-	const int TestCounter = 5;//количество тестов
+void UnitTests() {
 
-	const int LengthOfTests[TestCounter] = {10 , 5, 6, 9, 5};//длина массивов-начальных условий
+	int EqualArr[20][20];//двумерный массив для записи индексов дубликатов
+	int ArrColumns[20] = { 0 };//длина строки в EqualArr 
+
+	const int TestCounter = 6;//количество тестов
+
+	const int LengthOfTests[TestCounter] = {4, 5, 6, 5, 7, 5};//длина массивов-начальных условий
 
 	const char TestsDiscription[TestCounter][256] = {
-		{"Right mixed test\0"},
-		{"No solusion test\0"},
-		{"Duplicates on the left and right\0"},
-		{"No solusion test\0"},
-		{"All array is full of duplicates\0"}
+		{"Array is out of range test"},
+		{"Last element isn\'t duplicate"},
+		{"Element have duplicate early"},
+		{"Array is full of duplicate"},
+		{"Mixed test"},
+		{"Miss checked element"}
 	}; //описание каждого теста
 
 	bool Secuess;//переменная, определяющая прохождение всх тестов
 
 	int Tests[TestCounter][10] = {
-		{89, 70, 89, 1000, 1000, 56, 78, 89, 34, 34},
-		{ 12, 1, 5, 6, 7},
-		{ 1, 1, 2, 3, 4, 4},
-		{ 1, 2, 3, 4, 5, 6, 7, 8, 9},
-		{ 1, 1, 1, 1, 1}
+		{1, 2, 3, 4, 4},
+		{ 1, 2, 3, 4, 5 },
+		{1, 2, 1, 3, 1, 4},
+		{ 1, 1, 1, 1, 1},
+		{ 1, 2, 4, 6, 1, 2, 5},
+		{1, 1, 2, 1, 2}
 	};//исходные условия тестов
 
-	int Answers[TestCounter][3][5] = {
-		{
-			{0, 2, 7, -1, -1},
-			{3, 4, -1, -1, -1},
-			{8, 9, -1, -1, -1}
-		},
+	int RightLength[TestCounter][3] = {
+		{0},
+		{0},
+		{3, 0},
+		{5, 0},
+		{2, 2, 0},
+		{3, 2, 0}
+	}; //правильная длина ответов
+
+	int Answers[TestCounter][2][7] = {
 		{
 			{-1001, -1, -1, -1, -1},
-			{-1, -1, -1, -1, -1},
-			{-1, -1, -1, -1, -1}
-		},
-		{
-			{0, 1, -1, -1, -1}, 
-			{4, 5, -1, -1, -1},
 			{-1, -1, -1, -1, -1}
 		},
 		{
 			{-1001, -1, -1, -1, -1},
-			{-1, -1, -1, -1, -1},
+			{-1, -1, -1, -1, -1}
+		},
+		{
+			{0, 2, 4, -1, -1}, 
 			{-1, -1, -1, -1, -1}
 		},
 		{
 			{ 0, 1, 2, 3, 4},
-			{-1, -1, -1, -1, -1},
 			{-1, -1, -1, -1, -1}
+		},
+		{
+			{ 0, 4, -1, -1, -1},
+			{ 1, 5, -1, -1, -1}
+		},
+		{
+			{0, 1, 3, -1, -1},
+			{2, 4, -1, -1, -1}
 		}
 	};//ответы на тесты
 
@@ -185,11 +198,11 @@ void UnitTests(int EqualArr[][20], int ArrColumns[20]) {
 		NormalizeAnswer(EqualArr);
 		//поиск дубликатов
 		FindDuplicate(Tests[i], LengthOfTests[i], EqualArr, ArrColumns);
-		if (!CompareArrays(Answers[i], EqualArr, ArrColumns)) {
+		if (!CompareArrays(Answers[i], EqualArr, RightLength[i])) {
 			printf("Incorrect %d) %s \n", i + 1, TestsDiscription[i]);
 		}
 
-		Secuess = Secuess && (CompareArrays(Answers[i], EqualArr, ArrColumns));
+		Secuess = Secuess && (CompareArrays(Answers[i], EqualArr, RightLength[i]));
 	}
 
 	if(Secuess)
@@ -200,10 +213,10 @@ void UnitTests(int EqualArr[][20], int ArrColumns[20]) {
 int main(){
 	//исходные данные согласно условию
 	int arr[20], N;
+
+	UnitTests();
+	
 	scanf("%d", &N);
-
-
-
 	//проверка N на принадлежность заданному диапозону
 	if (N > 20 || N < 2) {
 		printf("Invalid data\n");
@@ -233,10 +246,6 @@ int main(){
 	else
 		print(EqualArr, ArrColumns);
 	printf("\n\n");
-
-	UnitTests(EqualArr, ArrColumns);
-	
-	
 
 	return 0;
 }
