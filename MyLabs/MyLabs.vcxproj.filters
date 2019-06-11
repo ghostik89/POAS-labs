@@ -48,6 +48,9 @@
     <ClCompile Include="Nekit.cpp">
       <Filter>Файлы ресурсов</Filter>
     </ClCompile>
+    <ClCompile Include="Source1.cpp">
+      <Filter>Файлы ресурсов</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="C:\Users\Михаил\Desktop\kate%27s field\Kate%27s field in Kate%27s field\универ\основы программирования\2 лаба\Lab_02_tarapatina\Lab_02_tarapatina\testing.h">
